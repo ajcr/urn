@@ -23,6 +23,10 @@ constraint_count: NAME "="  NUMBER -> constraint_eq
                 | NAME ">"  NUMBER -> constraint_gt
                 | NAME "<=" NUMBER -> constraint_le
                 | NAME ">=" NUMBER -> constraint_ge
+                | NUMBER  "<" NAME  "<" NUMBER -> constraint_lt_lt
+                | NUMBER "<=" NAME  "<" NUMBER -> constraint_le_lt
+                | NUMBER  "<" NAME "<=" NUMBER -> constraint_lt_le
+                | NUMBER "<=" NAME "<=" NUMBER -> constraint_le_le
 
 output_config: ("SHOW"i output_fmt | "SHOW"i output_float)
 output_fmt:   (TABLE | PLOT) -> output_fmt

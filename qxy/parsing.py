@@ -67,6 +67,18 @@ class BuildComputation(lark.Transformer):
     def constraint_ge(self, name, number):
         return ConstraintItem(name, min_=number)
     
+    def constraint_lt_lt(self, number_lo, name, number_hi):
+        return ConstraintItem(name, min_=number_lo+1, max_=number_hi)
+
+    def constraint_lt_le(self, number_lo, name, number_hi):
+        return ConstraintItem(name, min_=number_lo+1, max_=number_hi+1)
+
+    def constraint_le_lt(self, number_lo, name, number_hi):
+        return ConstraintItem(name, min_=number_lo, max_=number_hi)
+
+    def constraint_le_le(self, number_lo, name, number_hi):
+        return ConstraintItem(name, min_=number_lo, max_=number_hi+1)
+
     def output_fmt(self, output):
         self._output["output_fmt"] = str(output).upper()
         return lark.Discard
