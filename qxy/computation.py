@@ -10,7 +10,7 @@ from qxy.constraint import ConstraintItem
 class Computation:
     """Description of a computation."""
     computation_type: Literal["COUNT", "PROBABILITY"]
-    object_type: Literal["DRAW", "SEQUENCE"]
+    object_type: Literal["DRAW"]
     selection_range: range
     collection: Mapping[str, int]
     constraints: Collection[Collection[ConstraintItem]] = None

@@ -46,7 +46,7 @@ def reduce_constraints(constraints: Collection[ConstraintItem]) -> dict[str, Con
 
 def union_constraint_disjuncts(
     seq: Sequence[Sequence[ConstraintItem]]
-) -> Generator[tuple[int, dict[ConstraintItem]], None, None]:
+) -> Generator[tuple[int, dict[str, ConstraintItem]], None, None]:
     """Return the union of each subsequence of constraint disjuncts."""
     for n in range(1, len(seq) + 1):
         combs = itertools.combinations(seq, n)
