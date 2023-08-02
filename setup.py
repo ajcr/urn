@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
-from qxy import __version__
+from urn import __version__
 
 long_description = """
 ...
 """
 
 setup(
-    name="qxy",
+    name="urn",
     version=__version__,
     description="Quantity probability calculator",
     long_description=long_description,
@@ -24,14 +24,14 @@ setup(
     ],
     keywords="calculator probability count draw odds hypergeometric",
     project_urls={
-      "Source": "https://github.com/ajcr/qxy/",
-      "Tracker": "https://github.com/ajcr/qxy/issues",
+      "Source": "https://github.com/ajcr/urn/",
+      "Tracker": "https://github.com/ajcr/urn/issues",
     },
     python_requires=">=3.10.0",
     author="Alex Riley",
     license="MIT",
-    packages=find_packages(include=["qxy", "qxy.*"]),
+    packages=find_packages(include=["urn", "urn.*"]),
     tests_require=["pytest"],
     zip_safe=False,
-    entry_points={"console_scripts": ["qxy=qxy.cli:main"]},
+    entry_points={"console_scripts": ["urn=urn.cli:main"]},
 )

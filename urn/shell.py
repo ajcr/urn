@@ -2,16 +2,16 @@ import cmd
 
 import lark
 
-from qxy.evaluation import process_query
+from urn.evaluation import process_query
 
 
 EOL = ";"
-PROMPT = "QXY> "
+PROMPT = "urn> "
 PROMPT_CONTINUATION = "...  "
 
 
-class QxyShell(cmd.Cmd):
-    """QXY shell."""
+class UrnShell(cmd.Cmd):
+    """urn shell."""
     prompt = PROMPT
 
     def __init__(self, parser: lark.Lark) -> None:
@@ -41,7 +41,7 @@ class QxyShell(cmd.Cmd):
             print(f"Error: {error}")
 
     def do_quit(self, _) -> bool:
-        print("Exiting QXY shell.")
+        print("Exiting urn.")
         return True
     
     def emptyline(self) -> None:
@@ -53,5 +53,5 @@ class QxyShell(cmd.Cmd):
 
 
 def run_shell(parser: lark.Lark) -> None:
-    """Run QXY shell."""
-    QxyShell(parser=parser).cmdloop()
+    """Run urn shell."""
+    UrnShell(parser=parser).cmdloop()

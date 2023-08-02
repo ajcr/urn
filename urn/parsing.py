@@ -1,6 +1,6 @@
 import lark
 
-from qxy.constraint import ConstraintItem
+from urn.constraint import ConstraintItem
 
 
 @lark.v_args(inline=True)

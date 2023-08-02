@@ -3,12 +3,12 @@ import sys
 
 import lark
 
-from qxy import __version__
+from urn import __version__
 
 
 def parse_args() -> argparse.Namespace:
     """Parse CLI args."""
-    argparser = argparse.ArgumentParser(prog="qxy", description="Calculator.")
+    argparser = argparse.ArgumentParser(prog="urn", description="Calculator.")
     argparser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     command_source = argparser.add_mutually_exclusive_group()
     command_source.add_argument("-c", "--command", help="Command string to evaluate")
@@ -21,8 +21,8 @@ def main() -> None:
     args = parse_args()
 
     # Delay expensive imports until needed.
-    from qxy.shell import run_shell
-    from qxy.evaluation import process_query
+    from urn.shell import run_shell
+    from urn.evaluation import process_query
 
     command_parser = lark.Lark.open("grammar.lark", rel_to=__file__)
 

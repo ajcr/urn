@@ -3,8 +3,8 @@ import pytest
 from sympy import Poly
 from sympy.abc import x
 
-from qxy.evaluation import make_count_draw_polynomials
-from qxy.constraint import ConstraintItem
+from urn.evaluation import make_count_draw_polynomials
+from urn.constraint import ConstraintItem
 
 
 

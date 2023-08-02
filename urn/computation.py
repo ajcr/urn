@@ -3,7 +3,7 @@ from collections.abc import Collection, Mapping
 from dataclasses import dataclass
 from typing import Literal
 
-from qxy.constraint import ConstraintItem
+from urn.constraint import ConstraintItem
 
 
 @dataclass

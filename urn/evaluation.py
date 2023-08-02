@@ -4,10 +4,10 @@ import lark
 from sympy import Poly, Rational, binomial, prod
 from sympy.abc import x
 
-from qxy.computation import Computation
-from qxy.constraint import ConstraintItem, union_constraint_disjuncts
-from qxy.output import Output
-from qxy.parsing import BuildComputation
+from urn.computation import Computation
+from urn.constraint import ConstraintItem, union_constraint_disjuncts
+from urn.output import Output
+from urn.parsing import BuildComputation
 
 
 def make_count_draw_polynomials(

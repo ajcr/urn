@@ -1,4 +1,4 @@
-from qxy.constraint import ConstraintItem, union_constraint_disjuncts
+from urn.constraint import ConstraintItem, union_constraint_disjuncts
 
 
 def test_constraint_and():

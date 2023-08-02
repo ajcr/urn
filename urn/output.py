@@ -6,7 +6,7 @@ from typing import Literal
 import tabulate
 import uniplot
 
-from qxy.computation import Computation
+from urn.computation import Computation
 
 
 @dataclass
