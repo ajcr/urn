@@ -1,4 +1,3 @@
-import math
 from typing import Collection
 
 import lark
@@ -14,18 +13,17 @@ from urn.parsing import BuildComputation
 def make_count_draw_polynomials(
     collection: dict[str, int],
     constraints: dict[str, ConstraintItem],
-    selection_range: range | None,
+    selection_upper_bound: int | float,
 ) -> list[Poly]:
     """Construct a polynomial for each item in the collection."""
     polys = []
-    stop = selection_range.stop if selection_range is not None else math.inf
     for item, item_count in collection.items():
         if item in constraints:
             min_ = constraints[item].min_
-            max_ = min([item_count+1, stop, constraints[item].max_])
+            max_ = min([item_count+1, selection_upper_bound, constraints[item].max_])
         else:
             min_ = 0
-            max_ = min([item_count+1, stop])
+            max_ = min([item_count+1, selection_upper_bound])
         polys.append(
             degrees_to_polynomial_with_binomial_coeff(range(min_, max_), item_count)
         )
@@ -48,7 +46,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational]:
                     make_count_draw_polynomials(
                     collection=computation.collection,
                     constraints=constraints,
-                    selection_range=computation.selection_range,
+                    selection_upper_bound=computation.selection_size_bounds()[1],
                 )
             )
         if computation.selection_range is not None:

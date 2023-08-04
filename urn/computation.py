@@ -1,4 +1,5 @@
 import itertools
+import math
 from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Literal
@@ -15,7 +16,7 @@ class ComputationDescription:
     """Description of a computation."""
     computation_type: Literal["COUNT", "PROBABILITY"] = "COUNT"
     object_type: Literal["DRAW"] = "DRAW"
-    selection_range: range | None = None
+    selection_range: range | Collection[int] | None = None
     collection: Mapping[str, int] | None = None
     constraints: Collection[Collection[ConstraintItem]] = None
     with_replacement: bool = False
@@ -37,7 +38,7 @@ class ComputationDescription:
 
         # If not using replacement and selection size is given, clip the selection size
         # upper bound to size of collection
-        if not self.with_replacement and self.selection_range is not None:
+        if not self.with_replacement and isinstance(self.selection_range, range):
             self.selection_range = range(
                 self.selection_range.start,
                 min(self.selection_range.stop, self.collection_size()+1),
@@ -49,6 +50,14 @@ class ComputationDescription:
             raise ComputationDescriptionError(f"Constrained items not in collection: {missing}")
 
         self._is_finalised = True
+
+    def selection_size_bounds(self) -> tuple[int, int | float]:
+        if self.selection_range is None:
+            return 0, math.inf
+        elif isinstance(self.selection_size, range):
+            return self.selection_range.start, self.selection_range.stop
+        else:
+            return min(self.selection_range), max(self.selection_range) + 1
 
     def collection_size(self) -> int:
         return sum(self.collection.values())
