@@ -6,7 +6,6 @@ from sympy.abc import x
 
 from urn.computation import ComputationDescription, ComputationDescriptionError
 from urn.constraint import ConstraintItem, union_constraint_disjuncts
-from urn.output import Output
 from urn.parsing import BuildComputation
 
 

@@ -1,10 +1,10 @@
 import itertools
 import math
-from collections.abc import Collection, Mapping, Sequence
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass
 from typing import Literal
 
-from urn.constraint import ConstraintItem, reduce_constraints
+from urn.constraint import ConstraintItem
 
 
 class ComputationDescriptionError(Exception):
