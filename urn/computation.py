@@ -1,9 +1,9 @@
 import itertools
-from collections.abc import Collection, Mapping
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Literal
 
-from urn.constraint import ConstraintItem
+from urn.constraint import ConstraintItem, reduce_constraints
 
 
 class ComputationDescriptionError(Exception):
@@ -27,7 +27,7 @@ class ComputationDescription:
         Check that computation is valid and modify attributes as required.
         """
         if self.collection is None:
-            raise ComputationDescriptionError("Computation cannot be None.")
+            raise ComputationDescriptionError("Collection cannot be undefined.")
 
         # No constraints: constrain all items by their count
         if not self.constraints:
@@ -35,8 +35,9 @@ class ComputationDescription:
                 [ConstraintItem(name, 0, count+1) for name, count in self.collection.items()]
             ]
 
-        # If not using replacement, clip selection size upper bound to size of collection
-        if not self.with_replacement:
+        # If not using replacement and selection size is given, clip the selection size
+        # upper bound to size of collection
+        if not self.with_replacement and self.selection_range is not None:
             self.selection_range = range(
                 self.selection_range.start,
                 min(self.selection_range.stop, self.collection_size()+1),

@@ -29,7 +29,7 @@ class Output:
             zip(
                 computation.selection_range,
                 map(str_func, evaluation),
-                strict=True
+                strict=True,
             )
         )
         headers= [computation.x_label(), computation.y_label()]

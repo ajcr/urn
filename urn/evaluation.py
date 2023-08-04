@@ -1,3 +1,4 @@
+import math
 from typing import Collection
 
 import lark
@@ -13,17 +14,18 @@ from urn.parsing import BuildComputation
 def make_count_draw_polynomials(
     collection: dict[str, int],
     constraints: dict[str, ConstraintItem],
-    selection_range: range,
+    selection_range: range | None,
 ) -> list[Poly]:
     """Construct a polynomial for each item in the collection."""
     polys = []
+    stop = selection_range.stop if selection_range is not None else math.inf
     for item, item_count in collection.items():
         if item in constraints:
             min_ = constraints[item].min_
-            max_ = min([item_count+1, selection_range.stop, constraints[item].max_])
+            max_ = min([item_count+1, stop, constraints[item].max_])
         else:
             min_ = 0
-            max_ = min([item_count+1, selection_range.stop])
+            max_ = min([item_count+1, stop])
         polys.append(
             degrees_to_polynomial_with_binomial_coeff(range(min_, max_), item_count)
         )
@@ -39,17 +41,24 @@ def evaluate(computation: ComputationDescription) -> list[Rational]:
 
     if computation.object_type == "DRAW":
 
-        p = 0
+        poly = 0
         for n, constraints in union_constraint_disjuncts(computation.constraints):
             # Inclusion/Exclusion
-            p += (-1)**(n+1) * prod(
+            poly += (-1)**(n+1) * prod(
                     make_count_draw_polynomials(
                     collection=computation.collection,
                     constraints=constraints,
                     selection_range=computation.selection_range,
                 )
             )
-        counts = [p.coeff_monomial(x**y) for y in computation.selection_range]
+        if computation.selection_range is not None:
+            counts = [poly.coeff_monomial(x**y) for y in computation.selection_range]
+        else:
+            # Find the implied selection sizes (monomials with non-zero coeffs) and counts
+            selection_range, counts = zip(
+                *[(power, coeff) for (power,), coeff in poly.as_dict().items()]
+            )
+            computation.selection_range = selection_range
 
     else:
         raise NotImplementedError(computation.object_type)

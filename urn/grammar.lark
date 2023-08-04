@@ -8,7 +8,7 @@ start: computation
 computation: "COUNT"i       /DRAWS?/i selection "FROM"i collection ("WHERE"i constraints)? (output_config)* ";" -> count_draw
            | "PROBABILITY"i /DRAWS?/i selection "FROM"i collection  "WHERE"i constraints   (output_config)* ";" -> prob_draw
 
-selection: selection_size
+selection: selection_size?
 
 selection_size: ("size"i)? NUMBER             -> selection_size_int
               | ("size"i)? NUMBER ".." NUMBER -> selection_size_range
