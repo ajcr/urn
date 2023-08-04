@@ -7,16 +7,22 @@ from urn.constraint import ConstraintItem
 
 
 @dataclass
-class Computation:
+class ComputationDescription:
     """Description of a computation."""
-    computation_type: Literal["COUNT", "PROBABILITY"]
-    object_type: Literal["DRAW"]
-    selection_range: range
-    collection: Mapping[str, int]
+    computation_type: Literal["COUNT", "PROBABILITY"] = "COUNT"
+    object_type: Literal["DRAW"] = "DRAW"
+    selection_range: range | None = None
+    collection: Mapping[str, int] | None = None
     constraints: Collection[Collection[ConstraintItem]] = None
     with_replacement: bool = False
 
-    def __post_init__(self) -> None:
+    def finalise(self) -> None:
+        """Finalise computation so it can be evaluated.
+
+        Check that computation is valid and modify attributes as required.
+        """
+        if self.collection is None:
+            raise ValueError("Computation cannot be None.")
 
         # No constraints: constrain all items by their count
         if not self.constraints:
@@ -33,7 +39,7 @@ class Computation:
 
         # Error if a constraint applies to an item not in the collection
         c_names = {c.name for c in itertools.chain.from_iterable(self.constraints)}
-        if missing := c_names - self.collection.keys():
+        if self.collection and (missing := c_names - self.collection.keys()):
             raise ValueError(f"Constrained items not in collection: {missing}")
 
     def collection_size(self) -> int:

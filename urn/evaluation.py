@@ -4,7 +4,7 @@ import lark
 from sympy import Poly, Rational, binomial, prod
 from sympy.abc import x
 
-from urn.computation import Computation
+from urn.computation import ComputationDescription
 from urn.constraint import ConstraintItem, union_constraint_disjuncts
 from urn.output import Output
 from urn.parsing import BuildComputation
@@ -30,7 +30,7 @@ def make_count_draw_polynomials(
     return polys
 
 
-def evaluate(computation: Computation) -> list[Rational]:
+def evaluate(computation: ComputationDescription) -> list[Rational]:
     """Evaluate the computation described by the object."""
     if computation.object_type == "DRAW":
 
@@ -80,11 +80,9 @@ def process_query(parser: lark.Lark, query: str) -> str:
     tree = parser.parse(query)
 
     builder = BuildComputation()
-    build = builder.transform(tree)
+    build: BuildComputation = builder.transform(tree)
 
-    computation = Computation(**build._computation)
-    output = Output(**build._output)
+    build.computation.finalise()
+    evaluation = evaluate(build.computation)
 
-    evaluation = evaluate(computation)
-
-    return output.output(computation, evaluation)
+    return build.output.output(build.computation, evaluation)
