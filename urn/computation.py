@@ -6,6 +6,10 @@ from typing import Literal
 from urn.constraint import ConstraintItem
 
 
+class ComputationDescriptionError(Exception):
+    pass
+
+
 @dataclass
 class ComputationDescription:
     """Description of a computation."""
@@ -15,6 +19,7 @@ class ComputationDescription:
     collection: Mapping[str, int] | None = None
     constraints: Collection[Collection[ConstraintItem]] = None
     with_replacement: bool = False
+    _is_finalised: bool = False
 
     def finalise(self) -> None:
         """Finalise computation so it can be evaluated.
@@ -22,7 +27,7 @@ class ComputationDescription:
         Check that computation is valid and modify attributes as required.
         """
         if self.collection is None:
-            raise ValueError("Computation cannot be None.")
+            raise ComputationDescriptionError("Computation cannot be None.")
 
         # No constraints: constrain all items by their count
         if not self.constraints:
@@ -40,7 +45,9 @@ class ComputationDescription:
         # Error if a constraint applies to an item not in the collection
         c_names = {c.name for c in itertools.chain.from_iterable(self.constraints)}
         if self.collection and (missing := c_names - self.collection.keys()):
-            raise ValueError(f"Constrained items not in collection: {missing}")
+            raise ComputationDescriptionError(f"Constrained items not in collection: {missing}")
+
+        self._is_finalised = True
 
     def collection_size(self) -> int:
         return sum(self.collection.values())

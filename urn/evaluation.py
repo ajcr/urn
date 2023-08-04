@@ -4,7 +4,7 @@ import lark
 from sympy import Poly, Rational, binomial, prod
 from sympy.abc import x
 
-from urn.computation import ComputationDescription
+from urn.computation import ComputationDescription, ComputationDescriptionError
 from urn.constraint import ConstraintItem, union_constraint_disjuncts
 from urn.output import Output
 from urn.parsing import BuildComputation
@@ -32,6 +32,11 @@ def make_count_draw_polynomials(
 
 def evaluate(computation: ComputationDescription) -> list[Rational]:
     """Evaluate the computation described by the object."""
+    if not computation._is_finalised:
+        raise ComputationDescriptionError(
+            "Computation must be finalised before evaluation (use `finalise` method)"
+        )
+
     if computation.object_type == "DRAW":
 
         p = 0
@@ -78,11 +83,8 @@ def degrees_to_polynomial_with_binomial_coeff(degrees: Collection[int], n: int) 
 def process_query(parser: lark.Lark, query: str) -> str:
     """Parse query, build computation, evaulate and return result."""
     tree = parser.parse(query)
-
     builder = BuildComputation()
     build: BuildComputation = builder.transform(tree)
-
     build.computation.finalise()
     evaluation = evaluate(build.computation)
-
     return build.output.output(build.computation, evaluation)
