@@ -87,8 +87,10 @@ class BuildComputation(lark.Transformer):
     def output_fmt(self, output):
         if str(output).upper() == "PLOT":
             self.output.output_fmt = OutputFormat.PLOT
-        else:
+        elif str(output).upper() == "TABLE":
             self.output.output_fmt = OutputFormat.TABLE
+        else:
+            raise ValueError(f"Unknown output format '{output}'")
         return lark.Discard
 
     def output_float(self, _):
