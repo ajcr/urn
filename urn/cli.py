@@ -7,7 +7,7 @@ from urn import __version__
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse CLI args."""
+
     argparser = argparse.ArgumentParser(prog="urn", description="Calculator.")
     argparser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
@@ -21,7 +21,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    """Entrypoint."""
+
     args = parse_args()
 
     # Delay expensive imports until needed.

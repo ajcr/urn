@@ -11,7 +11,7 @@ class ComputationDescriptionError(Exception):
 
 @dataclass
 class ComputationDescription:
-    """Description of a computation."""
+
     computation_type: ComputationAction = ComputationAction.COUNT
     object_type: ComputationObject = ComputationObject.DRAW
     selection_range: range | Sequence[int] | None = None

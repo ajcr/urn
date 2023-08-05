@@ -11,7 +11,6 @@ from urn.constants import OutputFormat
 
 @dataclass
 class Output:
-    """Output config."""
 
     output_fmt: OutputFormat = OutputFormat.TABLE
     output_float: bool = False
@@ -21,7 +20,6 @@ class Output:
         computation: ComputationDescription,
         evaluation: Sequence[Rational | int]
     ) -> str:
-        """Create output."""
         if self.output_fmt == OutputFormat.PLOT:
             return self.make_plot(computation, evaluation)
         else:
