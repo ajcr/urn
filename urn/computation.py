@@ -1,11 +1,9 @@
 import itertools
-import math
-from collections.abc import Collection, Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Literal
 
 from urn.constraint import ConstraintItem
-
+from urn.constants import ComputationAction, ComputationObject
 
 class ComputationDescriptionError(Exception):
     pass
@@ -14,13 +12,13 @@ class ComputationDescriptionError(Exception):
 @dataclass
 class ComputationDescription:
     """Description of a computation."""
-    computation_type: Literal["COUNT", "PROBABILITY"] = "COUNT"
-    object_type: Literal["DRAW"] = "DRAW"
-    selection_range: range | Collection[int] | None = None
+    computation_type: ComputationAction = ComputationAction.COUNT
+    object_type: ComputationObject = ComputationObject.DRAW
+    selection_range: range | Sequence[int] | None = None
     collection: Mapping[str, int] | None = None
-    constraints: Collection[Collection[ConstraintItem]] = None
+    constraints: Sequence[Sequence[ConstraintItem]] = ()
     with_replacement: bool = False
-    _is_finalised: bool = False
+    is_finalised: bool = False
 
     def finalise(self) -> None:
         """Finalise computation so it can be evaluated.
@@ -28,7 +26,7 @@ class ComputationDescription:
         Check that computation is valid and modify attributes as required.
         """
         if self.collection is None:
-            raise ComputationDescriptionError("Collection cannot be undefined.")
+            raise ComputationDescriptionError("Collection is undefined.")
 
         # No constraints: constrain all items by their count
         if not self.constraints:
@@ -49,21 +47,23 @@ class ComputationDescription:
         if self.collection and (missing := c_names - self.collection.keys()):
             raise ComputationDescriptionError(f"Constrained items not in collection: {missing}")
 
-        self._is_finalised = True
+        self.is_finalised = True
 
-    def selection_size_bounds(self) -> tuple[int, int | float]:
+    def selection_size_bounds(self) -> tuple[int, int]:
         if self.selection_range is None:
-            return 0, math.inf
-        elif isinstance(self.selection_size, range):
+            return 0, self.collection_size()
+        elif isinstance(self.selection_range, range):
             return self.selection_range.start, self.selection_range.stop
         else:
             return min(self.selection_range), max(self.selection_range) + 1
 
     def collection_size(self) -> int:
+        if self.collection is None:
+            raise ComputationDescriptionError("Collection is undefined.")
         return sum(self.collection.values())
 
     def x_label(self) -> str:
-        return f"{self.object_type} size".lower()
+        return f"{self.object_type.name} size".lower()
 
     def y_label(self) -> str:
-        return self.computation_type.lower()
+        return self.computation_type.name.lower()

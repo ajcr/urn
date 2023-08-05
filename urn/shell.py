@@ -1,7 +1,9 @@
 import cmd
+import sys
 
 import lark
 
+from urn.computation import ComputationDescriptionError
 from urn.evaluation import process_query
 
 
@@ -34,11 +36,13 @@ class UrnShell(cmd.Cmd):
 
         return line
 
-    def default(self, line: str) -> str:
+    def default(self, line: str) -> None:
         try:
             print(self._process_input(line))
-        except Exception as error:
-            print(f"Error: {error}")
+        except ComputationDescriptionError as error:
+            print(f"Computation error: {error}", file=sys.stderr)
+        except lark.exceptions.LarkError as error:
+            print(f"Parser error: {error}", file=sys.stderr)
 
     def do_quit(self, _) -> bool:
         print("Exiting urn.")

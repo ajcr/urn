@@ -3,6 +3,7 @@ import lark
 from urn.constraint import ConstraintItem
 from urn.output import Output
 from urn.computation import ComputationDescription
+from urn.constants import OutputFormat, ComputationAction, ComputationObject
 
 
 @lark.v_args(inline=True)
@@ -42,14 +43,14 @@ class BuildComputation(lark.Transformer):
     
     @lark.v_args(tree=True)
     def count_draw(self, _):
-        self.computation.computation_type = "COUNT"
-        self.computation.object_type = "DRAW"
+        self.computation.computation_type = ComputationAction.COUNT
+        self.computation.object_type = ComputationObject.DRAW
         return lark.Discard
     
     @lark.v_args(tree=True)
     def prob_draw(self, _):
-        self.computation.computation_type = "PROBABILITY"
-        self.computation.object_type = "DRAW"
+        self.computation.computation_type = ComputationAction.PROBABILITY
+        self.computation.object_type = ComputationObject.DRAW
         return lark.Discard
     
     @lark.v_args(tree=True)
@@ -84,7 +85,10 @@ class BuildComputation(lark.Transformer):
         return ConstraintItem(name, min_=number_lo, max_=number_hi+1)
 
     def output_fmt(self, output):
-        self.output.output_fmt = str(output).upper()
+        if str(output).upper() == "PLOT":
+            self.output.output_fmt = OutputFormat.PLOT
+        else:
+            self.output.output_fmt = OutputFormat.TABLE
         return lark.Discard
 
     def output_float(self, _):

@@ -1,5 +1,5 @@
 import itertools
-from collections.abc import Collection, Sequence, Generator
+from collections.abc import Iterable, Sequence, Generator
 from dataclasses import dataclass
 
 
@@ -33,7 +33,7 @@ class ConstraintItem:
         )
 
 
-def reduce_constraints(constraints: Collection[ConstraintItem]) -> dict[str, ConstraintItem]:
+def reduce_constraints(constraints: Iterable[ConstraintItem]) -> dict[str, ConstraintItem]:
     """Reduce collection of constraints by combining constraints on common items."""
     output = {}
     for constraint in constraints:
