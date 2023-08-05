@@ -33,8 +33,12 @@ class ConstraintItem:
         )
 
 
-def reduce_constraints(constraints: Iterable[ConstraintItem]) -> dict[str, ConstraintItem]:
-    """Reduce collection of constraints by combining constraints on common items."""
+def reduce_constraints(
+    constraints: Iterable[ConstraintItem]
+) -> dict[str, ConstraintItem]:
+    """Reduce collection of constraints by combining constraints
+    on common items.
+    """
     output = {}
     for constraint in constraints:
         if constraint.name in output:

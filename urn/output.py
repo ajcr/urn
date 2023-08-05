@@ -16,14 +16,22 @@ class Output:
     output_fmt: OutputFormat = OutputFormat.TABLE
     output_float: bool = False
 
-    def output(self, computation: ComputationDescription, evaluation: Sequence[Rational | int]) -> str:
+    def output(
+        self,
+        computation: ComputationDescription,
+        evaluation: Sequence[Rational | int]
+    ) -> str:
         """Create output."""
         if self.output_fmt == OutputFormat.PLOT:
             return self.make_plot(computation, evaluation)
         else:
             return self.make_table(computation, evaluation)
 
-    def make_table(self, computation: ComputationDescription, evaluation: Sequence[Rational | int]) -> str:
+    def make_table(
+        self,
+        computation: ComputationDescription,
+        evaluation: Sequence[Rational | int],
+    ) -> str:
         if computation.selection_range is None:
             raise TypeError("selection range is None")
         if self.output_float:
@@ -40,12 +48,16 @@ class Output:
         headers= [computation.x_label(), computation.y_label()]
         return tabulate.tabulate(rows, headers=headers)
     
-    def make_plot(self, computation: ComputationDescription, evaluation: Sequence[Rational | int]) -> str:
+    def make_plot(
+        self,
+        computation: ComputationDescription,
+        evaluation: Sequence[Rational | int],
+    ) -> str:
         if computation.selection_range is None:
             raise TypeError("selection range is None")
         if len(computation.selection_range) != len(evaluation):
             raise ValueError(
-                "Evaluation sequence must be same length as computation.selection_range."
+                "Evaluation sequence must be same length as selection range."
             )
         plt = uniplot.plot_to_string(
             ys=evaluation,

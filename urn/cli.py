@@ -9,10 +9,14 @@ from urn import __version__
 def parse_args() -> argparse.Namespace:
     """Parse CLI args."""
     argparser = argparse.ArgumentParser(prog="urn", description="Calculator.")
-    argparser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    argparser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     command_source = argparser.add_mutually_exclusive_group()
-    command_source.add_argument("-c", "--command", help="Command string to evaluate")
-    command_source.add_argument("-f", "--filename", help="Read command string from file and evaluate")
+    command_source.add_argument(
+        "-c", "--command", help="Command string to evaluate")
+    command_source.add_argument(
+        "-f", "--filename", help="Read command string from file and evaluate")
     return argparser.parse_args()
 
 

@@ -31,11 +31,14 @@ class ComputationDescription:
         # No constraints: constrain all items by their count
         if not self.constraints:
             self.constraints = [
-                [ConstraintItem(name, 0, count+1) for name, count in self.collection.items()]
+                [
+                    ConstraintItem(name, 0, count+1)
+                    for name, count in self.collection.items()
+                ]
             ]
 
-        # If not using replacement and selection size is given, clip the selection size
-        # upper bound to size of collection
+        # If not using replacement and selection size is given, clip the selection
+        # size upper bound to size of collection
         if not self.with_replacement and isinstance(self.selection_range, range):
             self.selection_range = range(
                 self.selection_range.start,
@@ -45,7 +48,9 @@ class ComputationDescription:
         # Error if a constraint applies to an item not in the collection
         c_names = {c.name for c in itertools.chain.from_iterable(self.constraints)}
         if self.collection and (missing := c_names - self.collection.keys()):
-            raise ComputationDescriptionError(f"Constrained items not in collection: {missing}")
+            raise ComputationDescriptionError(
+                f"Constrained items not in collection: {missing}"
+            )
 
         self.is_finalised = True
 

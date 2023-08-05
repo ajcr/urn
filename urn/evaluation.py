@@ -25,7 +25,9 @@ def make_count_draw_polynomials(
             min_ = 0
             max_ = min([item_count+1, selection_upper_bound])
         polys.append(
-            degrees_to_polynomial_with_binomial_coeff(range(min_, max_), item_count)  # type: ignore
+            degrees_to_polynomial_with_binomial_coeff(
+                range(min_, max_), item_count  # type: ignore
+            )
         )
     return polys
 
@@ -55,7 +57,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         if computation.selection_range is not None:
             counts = [poly.coeff_monomial(x**y) for y in computation.selection_range]
         else:
-            # Find the implied selection sizes (monomials with non-zero coeffs) and counts
+            # Find implied selection sizes (monomials with non-zero coeffs)
             pairs = [(power, coeff) for (power,), coeff in poly.as_dict().items()]
             selection_range, counts = zip(*pairs)
             computation.selection_range = selection_range
