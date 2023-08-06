@@ -6,7 +6,7 @@ from dataclasses import dataclass
 INFINITY = float("inf")
 
 
-@dataclass
+@dataclass(eq=True)
 class ConstraintItem:
     """Constraint on item.
 

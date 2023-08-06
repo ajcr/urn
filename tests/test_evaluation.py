@@ -1,4 +1,3 @@
-
 import pytest
 from sympy import Poly, Rational, binomial
 from sympy.abc import x
@@ -117,7 +116,9 @@ def test_make_count_draw_polynomials(
                 object_type=ComputationObject.DRAW,
                 selection_range=[3, 4, 5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
-                constraints=[[ConstraintItem("red", 0, 4), ConstraintItem("blue", 3, 4)]],
+                constraints=[
+                    [ConstraintItem("red", 0, 4), ConstraintItem("blue", 3, 4)]
+                ],
             ),
             [220, 5940, 77220, 643500, 3460600],
             id="Count draws from RBG, one disjunct",
@@ -128,7 +129,9 @@ def test_make_count_draw_polynomials(
                 object_type=ComputationObject.DRAW,
                 selection_range=[3, 4, 5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
-                constraints=[[ConstraintItem("red", 0, 4)], [ConstraintItem("blue", 3, 4)]],
+                constraints=[
+                    [ConstraintItem("red", 0, 4)], [ConstraintItem("blue", 3, 4)]
+                ],
             ),
             [9139, 80431, 529529, 2693691, 11257389],
             id="Count draws from RBG, two disjuncts",
@@ -154,7 +157,9 @@ def test_make_count_draw_polynomials(
                 object_type=ComputationObject.DRAW,
                 selection_range=[3, 4, 5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
-                constraints=[[ConstraintItem("red", 0, 4)], [ConstraintItem("blue", 3, 4)]],
+                constraints=[
+                    [ConstraintItem("red", 0, 4)], [ConstraintItem("blue", 3, 4)]
+                ],
             ),
             [
                 Rational(9139, binomial(39, 3)),

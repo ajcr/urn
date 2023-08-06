@@ -9,7 +9,7 @@ class ComputationDescriptionError(Exception):
     pass
 
 
-@dataclass
+@dataclass(eq=True)
 class ComputationDescription:
 
     computation_type: ComputationAction = ComputationAction.COUNT
