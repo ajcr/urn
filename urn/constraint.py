@@ -15,9 +15,6 @@ class ConstraintItem:
     name: str
     min_: int = 0
     max_: int | float = INFINITY
-   
-    def __repr__(self):
-        return f"{self.min_} <= {self.name} < {self.max_}"
 
     def __and__(self, other):
         if not isinstance(other, ConstraintItem):

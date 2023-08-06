@@ -37,13 +37,16 @@ class ComputationDescription:
                 ]
             ]
 
-        # If not using replacement and selection size is given, clip the selection
-        # size upper bound to size of collection
-        if not self.with_replacement and isinstance(self.selection_range, range):
+        # If selection size is given, clip upper bound to size of collection
+        if isinstance(self.selection_range, range):
             self.selection_range = range(
                 self.selection_range.start,
                 min(self.selection_range.stop, self.collection_size()+1),
             )
+        elif isinstance(self.selection_range, Sequence):
+            self.selection_range = [
+                n for n in self.selection_range if n <= self.collection_size()
+            ]
 
         # Error if a constraint applies to an item not in the collection
         c_names = {c.name for c in itertools.chain.from_iterable(self.constraints)}
