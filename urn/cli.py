@@ -5,10 +5,12 @@ import lark
 
 from urn import __version__
 
+DESCRIPTION = "Draw odds calculator."
+
 
 def parse_args() -> argparse.Namespace:
 
-    argparser = argparse.ArgumentParser(prog="urn", description="Calculator.")
+    argparser = argparse.ArgumentParser(prog="urn", description=DESCRIPTION)
     argparser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
     )

@@ -49,7 +49,7 @@ def parser(request):
                     [ConstraintItem("A", 0, 6), ConstraintItem("A", 4, INFINITY)]
                 ],
             ),
-            id="Count draw, two constraints",
+            id="Count draw, two constraints on same item",
         ),
         pytest.param(
             "COUNT DRAWS FROM A=7 WHERE 4 < A <= 5;",

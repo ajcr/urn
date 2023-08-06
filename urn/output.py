@@ -60,7 +60,6 @@ class Output:
         plt = uniplot.plot_to_string(
             ys=evaluation,
             xs=computation.selection_range,
-            color=True,
             y_min=0,
         )
         return "\n".join(plt)
