@@ -1,5 +1,9 @@
 # urn
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ajcr/urn/main/assets/hypergeom.png" alt="hypergeometric choices"/>
+</p>
+
 Hypergeometric calculator with a simple language interface.
 
 Quickly compute the probability of drawing a particular set of objects from a background collection (balls from an urn, cards from a deck, people from a population).
