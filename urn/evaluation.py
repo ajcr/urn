@@ -66,7 +66,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         raise NotImplementedError(computation.object_type)
 
     if computation.computation_type == ComputationAction.COUNT:
-        return counts  # type: ignore
+        return list(counts)  # type: ignore
 
     if computation.computation_type == ComputationAction.PROBABILITY:
         total_items = computation.collection_size()

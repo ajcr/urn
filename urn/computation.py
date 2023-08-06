@@ -17,7 +17,6 @@ class ComputationDescription:
     selection_range: range | Sequence[int] | None = None
     collection: Mapping[str, int] | None = None
     constraints: Sequence[Sequence[ConstraintItem]] = ()
-    with_replacement: bool = False
     is_finalised: bool = False
 
     def finalise(self) -> None:
@@ -59,7 +58,7 @@ class ComputationDescription:
 
     def selection_size_bounds(self) -> tuple[int, int]:
         if self.selection_range is None:
-            return 0, self.collection_size()
+            return 0, self.collection_size() + 1
         elif isinstance(self.selection_range, range):
             return self.selection_range.start, self.selection_range.stop
         else:

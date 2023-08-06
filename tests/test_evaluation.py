@@ -1,11 +1,12 @@
 
 import pytest
-from sympy import Poly
+from sympy import Poly, Rational, binomial
 from sympy.abc import x
 
-from urn.evaluation import make_count_draw_polynomials
+from urn.evaluation import make_count_draw_polynomials, evaluate
 from urn.constraint import ConstraintItem
-
+from urn.computation import ComputationDescription
+from urn.constants import ComputationAction, ComputationObject
 
 
 @pytest.mark.parametrize(
@@ -83,3 +84,89 @@ def test_make_count_draw_polynomials(
     assert polys == expected_polynomials
 
 
+@pytest.mark.parametrize(
+    ["computation", "expected_result"],
+    [
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.COUNT,
+                object_type=ComputationObject.DRAW,
+                selection_range=None,
+                collection={"A": 5},
+                constraints=[],
+            ),
+            [1, 5, 10, 10, 5, 1],
+            id="Draw from 5A, no constraints",
+        ),
+        # The following can be verified by generating all combinations and counting
+        # those that match the constraints, e.g.:
+        #
+        # >>> for draw_size in [3, 4, 5, 6, 7]: print(sum(
+        # ...     1 for C in combinations(
+        # ...         ["blue"]*12 + ["red"]*16 + ["green"]*11,
+        # ...         draw_size,
+        # ...     )
+        # ...     if C.count("red") <= 3 or C.count("blue") == 3)
+        # ... ))
+        # 9139
+        # ...
+        # 11257389
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.COUNT,
+                object_type=ComputationObject.DRAW,
+                selection_range=[3, 4, 5, 6, 7],
+                collection={"blue": 12, "red": 16, "green": 11},
+                constraints=[[ConstraintItem("red", 0, 4), ConstraintItem("blue", 3, 4)]],
+            ),
+            [220, 5940, 77220, 643500, 3460600],
+            id="Count draws from RBG, one disjunct",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.COUNT,
+                object_type=ComputationObject.DRAW,
+                selection_range=[3, 4, 5, 6, 7],
+                collection={"blue": 12, "red": 16, "green": 11},
+                constraints=[[ConstraintItem("red", 0, 4)], [ConstraintItem("blue", 3, 4)]],
+            ),
+            [9139, 80431, 529529, 2693691, 11257389],
+            id="Count draws from RBG, two disjuncts",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.COUNT,
+                object_type=ComputationObject.DRAW,
+                selection_range=[5, 6, 7],
+                collection={"blue": 12, "red": 16, "green": 11},
+                constraints=[
+                    [ConstraintItem("red", 0, 4), ConstraintItem("green", 2, 5)],
+                    [ConstraintItem("blue", 3, 4)],
+                    [ConstraintItem("green", 5, 12)],
+                ],
+            ),
+            [317372, 2118303, 10066617],
+            id="Count draws from RBG, three disjuncts",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.PROBABILITY,
+                object_type=ComputationObject.DRAW,
+                selection_range=[3, 4, 5, 6, 7],
+                collection={"blue": 12, "red": 16, "green": 11},
+                constraints=[[ConstraintItem("red", 0, 4)], [ConstraintItem("blue", 3, 4)]],
+            ),
+            [
+                Rational(9139, binomial(39, 3)),
+                Rational(80431, binomial(39, 4)),
+                Rational(529529, binomial(39, 5)),
+                Rational(2693691, binomial(39, 6)),
+                Rational(11257389, binomial(39, 7)),
+            ],
+            id="Probability draw from RBG, two disjuncts",
+        ),
+    ]
+)
+def test_evaluate(computation, expected_result):
+    computation.finalise()
+    assert evaluate(computation) == expected_result
