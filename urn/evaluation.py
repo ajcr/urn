@@ -1,7 +1,7 @@
 from collections.abc import Collection, Mapping
 
 import lark
-from sympy import Poly, Rational, binomial, prod
+from sympy import Poly, Rational, binomial, prod, factorial
 from sympy.abc import x
 
 from urn.computation import ComputationDescription, ComputationDescriptionError
@@ -15,7 +15,6 @@ def make_count_draw_polynomials(
     constraints: Mapping[str, ConstraintItem],
     selection_upper_bound: int,
 ) -> list[Poly]:
-    """Construct a polynomial for each item in the collection."""
     polys = []
     for item, item_count in collection.items():
         if item in constraints:
@@ -32,6 +31,29 @@ def make_count_draw_polynomials(
     return polys
 
 
+def make_count_draw_with_replacement_polynomials(
+    computation: ComputationDescription,
+    constraints: Mapping[str, ConstraintItem],
+) -> list[Poly]:
+    polys = []
+    _, selection_upper_bound = computation.selection_size_bounds()
+    for item, item_count in computation.collection.items():
+        if item in constraints:
+            min_ = constraints[item].min_
+            max_ = min(constraints[item].max_, selection_upper_bound)
+        else:
+            min_ = 0
+            max_ = selection_upper_bound
+        polys.append(
+            degrees_to_polynomial_with_fractional_coeff(
+                range(min_, max_),  # type: ignore
+                item_count,
+            )
+        )
+    return polys
+
+
+
 def evaluate(computation: ComputationDescription) -> list[Rational | int]:
     """Evaluate the computation described by the object."""
     if not computation.is_finalised or computation.collection is None:
@@ -39,16 +61,15 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
             "Computation must be finalised before evaluation (use `finalise` method)"
         )
 
-    _, selection_upper_bound = computation.selection_size_bounds()
-
-    if computation.object_type == ComputationObject.DRAW:
-
+    if (
+        computation.object_type == ComputationObject.DRAW
+        and computation.with_replacement is False
+    ):
+        _, selection_upper_bound = computation.selection_size_bounds()
         poly = Poly(0, x)
-
         for n, constraints in union_constraint_disjuncts(computation.constraints):
-            # Inclusion/Exclusion
             poly += (-1)**(n+1) * prod(
-                    make_count_draw_polynomials(
+                make_count_draw_polynomials(
                     collection=computation.collection,
                     constraints=constraints,
                     selection_upper_bound=selection_upper_bound,
@@ -62,22 +83,59 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
             selection_range, counts = zip(*pairs)
             computation.selection_range = selection_range
 
+        if computation.computation_type == ComputationAction.COUNT:
+            return list(counts)  # type: ignore
+
+        if computation.computation_type == ComputationAction.PROBABILITY:
+            total_items = computation.collection_size()
+            possibilities = [
+                binomial(total_items, y) for y in computation.selection_range
+            ]
+            return [c/p for c, p in zip(counts, possibilities, strict=True)]
+
+    elif (
+        computation.object_type == ComputationObject.DRAW
+        and computation.with_replacement is True
+    ):
+        assert computation.selection_range is not None
+
+        size = computation.collection_size()
+        total_unconstrained_draws = [size**n for n in computation.selection_range]
+
+        if computation.computation_type == ComputationAction.COUNT:
+            if not computation.constraints:
+                return total_unconstrained_draws
+            
+        poly = Poly(0, x)
+        for n, constraints in union_constraint_disjuncts(computation.constraints):
+            poly += (-1)**(n+1) * prod(
+                make_count_draw_with_replacement_polynomials(
+                    computation=computation, constraints=constraints,
+                )
+            )
+
+        coeffs = [poly.coeff_monomial(x**y) for y in computation.selection_range]
+        factorials = [factorial(n) for n in computation.selection_range]
+        counts = [c*f for c, f in zip(coeffs, factorials, strict=True)]
+
+        if computation.computation_type == ComputationAction.COUNT:
+            return counts
+
+        if computation.computation_type == ComputationAction.PROBABILITY:
+            return [
+                count / total for count, total in zip(
+                    counts, total_unconstrained_draws, strict=True
+                )
+            ]
+
     else:
         raise NotImplementedError(computation.object_type)
-
-    if computation.computation_type == ComputationAction.COUNT:
-        return list(counts)  # type: ignore
-
-    if computation.computation_type == ComputationAction.PROBABILITY:
-        total_items = computation.collection_size()
-        possibilities = [binomial(total_items, y) for y in computation.selection_range]
-        return [c/p for c, p in zip(counts, possibilities, strict=True)]
 
     raise NotImplementedError(computation.computation_type)
 
 
 def degrees_to_polynomial_with_binomial_coeff(degrees: Collection[int], n: int) -> Poly:
-    """For each degree `d` in a set, create the polynomial with terms
+    """For each degree `d`, create the polynomial with terms
     of degree `d` having binomial coefficient `bin(n, d)`:
 
         {0, 2, 5} -> bin(n, 5)*x**5 + bin(n, 2)*x**2 + 1
@@ -87,6 +145,25 @@ def degrees_to_polynomial_with_binomial_coeff(degrees: Collection[int], n: int) 
 
     for degree in degrees:
         degree_coeff_dict[degree] = binomial(n, degree)
+
+    return Poly.from_dict(degree_coeff_dict, x)
+
+
+def degrees_to_polynomial_with_fractional_coeff(
+    degrees: Collection[int], n: int
+) -> Poly:
+    """
+    For each degree `d`, create the polynomial with those
+    terms with coefficient (n**d / d!) where n is the count
+    of the item in the collection:
+
+        {5} -> (n**5 / 5!) * x**5
+
+    """
+    degree_coeff_dict = {}
+
+    for degree in degrees:
+        degree_coeff_dict[degree] = Rational(n ** degree, factorial(degree))
 
     return Poly.from_dict(degree_coeff_dict, x)
 

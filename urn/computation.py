@@ -1,6 +1,6 @@
 import itertools
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from urn.constraint import ConstraintItem
 from urn.constants import ComputationAction, ComputationObject
@@ -15,8 +15,9 @@ class ComputationDescription:
     computation_type: ComputationAction = ComputationAction.COUNT
     object_type: ComputationObject = ComputationObject.DRAW
     selection_range: range | Sequence[int] | None = None
-    collection: Mapping[str, int] | None = None
-    constraints: Sequence[Sequence[ConstraintItem]] = ()
+    collection: Mapping[str, int] = field(default_factory=dict)
+    constraints: Sequence[Sequence[ConstraintItem]] = field(default_factory=list)
+    with_replacement: bool = False
     is_finalised: bool = False
 
     def finalise(self) -> None:
@@ -24,11 +25,8 @@ class ComputationDescription:
 
         Check that computation is valid and modify attributes as required.
         """
-        if self.collection is None:
-            raise ComputationDescriptionError("Collection is undefined.")
-
-        # No constraints: constrain all items by their count
-        if not self.constraints:
+        # No constraints: constrain items by count if drawing without replacement
+        if not self.constraints and not self.with_replacement:
             self.constraints = [
                 [
                     ConstraintItem(name, 0, count+1)
@@ -37,15 +35,20 @@ class ComputationDescription:
             ]
 
         # If selection size is given, clip upper bound to size of collection
-        if isinstance(self.selection_range, range):
+        if not self.with_replacement and isinstance(self.selection_range, range):
             self.selection_range = range(
                 self.selection_range.start,
                 min(self.selection_range.stop, self.collection_size()+1),
             )
-        elif isinstance(self.selection_range, Sequence):
+        elif not self.with_replacement and isinstance(self.selection_range, Sequence):
             self.selection_range = [
                 n for n in self.selection_range if n <= self.collection_size()
             ]
+
+        if self.with_replacement and self.selection_range is None:
+            raise ComputationDescriptionError(
+                "Must specify selection number if drawing with replacement."
+            )
 
         # Error if a constraint applies to an item not in the collection
         c_names = {c.name for c in itertools.chain.from_iterable(self.constraints)}
