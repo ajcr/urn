@@ -170,6 +170,107 @@ def test_make_count_draw_polynomials(
             ],
             id="Probability draw from RBG, two disjuncts",
         ),
+        # The following probabilities can be verified by generating products
+        # and counting those that match the constraints, e.g.:
+        #
+        #    def draws_with_replacement(draw_size):
+        #        total = 0
+        #        good = 0
+        #        for c in itertools.product(
+        #            ["blue"]*3 + ["red"]*4 + ["green"]*5, repeat=draw_size
+        #        ):
+        #            total += 1
+        #            if c.count("red") < 4:
+        #                good += 1
+        #        return good, total
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.PROBABILITY,
+                object_type=ComputationObject.DRAW,
+                selection_range=[5, 6, 7],
+                collection={"blue": 3, "red": 4, "green": 5},
+                constraints=[[ConstraintItem("red", 0, 4)]],
+                with_replacement=True,
+            ),
+            [
+                Rational(237568, 248832),
+                Rational(2686976, 2985984),
+                Rational(29622272, 35831808),
+            ],
+            id="Probability draw with replacement from RBG, one constraint on red",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.PROBABILITY,
+                object_type=ComputationObject.DRAW,
+                selection_range=[4, 5, 6],
+                collection={"blue": 3, "red": 4, "green": 5},
+                constraints=[
+                    [ConstraintItem("red", 1, 4), ConstraintItem("blue", 0, 1)]
+                ],
+                with_replacement=True,
+            ),
+            [
+                Rational(5680, 20736),
+                Rational(48500, 248832),
+                Rational(385000, 2985984),
+            ],
+            id="Probability draw with replacement from RBG, two constraints",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.PROBABILITY,
+                object_type=ComputationObject.DRAW,
+                selection_range=[4, 5, 6],
+                collection={"blue": 3, "red": 4, "green": 5},
+                constraints=[
+                    [ConstraintItem("red", 1, 4), ConstraintItem("blue", 0, 1)],
+                    [ConstraintItem("green", 3, 7)],
+                    [ConstraintItem("green", 3, 4), ConstraintItem("red", 2, 10)],
+                ],
+                with_replacement=True,
+            ),
+            [
+                Rational(7805, 20736),
+                Rational(102250, 248832),
+                Rational(1463750, 2985984),
+            ],
+            id="Probability draw with replacement from RBG, three constraint disjuncts",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.COUNT,
+                object_type=ComputationObject.DRAW,
+                selection_range=[5, 6, 7],
+                collection={"blue": 3, "red": 4, "green": 5},
+                constraints=[],
+                with_replacement=True,
+            ),
+            [
+                248832,
+                2985984,
+                35831808,
+            ],
+            id="Count draws with replacement from RBG, no constraints",
+        ),
+        pytest.param(
+            ComputationDescription(
+                computation_type=ComputationAction.COUNT,
+                object_type=ComputationObject.DRAW,
+                selection_range=[4, 5, 6],
+                collection={"blue": 3, "red": 4, "green": 5},
+                constraints=[
+                    [ConstraintItem("red", 1, 4), ConstraintItem("blue", 0, 1)]
+                ],
+                with_replacement=True,
+            ),
+            [
+                5680,
+                48500,
+                385000,
+            ],
+            id="Count draws with replacement from RBG, two constraints",
+        ),
     ]
 )
 def test_evaluate(computation, expected_result):

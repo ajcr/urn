@@ -38,6 +38,10 @@ class BuildComputation(lark.Transformer):
         self.computation.selection_range = range(low, high+1)
         return lark.Discard
 
+    def replacement(self, _):
+        self.computation.with_replacement = True
+        return lark.Discard
+
     def collection_item(self, name, number):
         return name, number
     
