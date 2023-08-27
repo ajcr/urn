@@ -125,8 +125,9 @@ urn> probability draw 2..13 with replacement
 
 Finally, we can use `OR` to specify any number of alternative constraints on our draw.
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ajcr/urn/main/assets/rbg_draw_3.png" alt="constraints using OR"/>
+  <img src="https://raw.githubusercontent.com/ajcr/urn/main/assets/rbg_draw_2.png" alt="constraints using OR"/>
 </p>
+
 ```
 urn> probability draw 1..10 from red=5, blue=7, green=3
 ...  where red >= 2 and blue <= 3
