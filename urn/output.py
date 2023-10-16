@@ -6,7 +6,7 @@ import tabulate
 import uniplot
 
 from urn.computation import ComputationDescription
-from urn.constants import OutputFormat
+from urn.constants import OutputFormat, ComputationAction
 
 
 @dataclass
@@ -16,9 +16,7 @@ class Output:
     output_float: bool = False
 
     def output(
-        self,
-        computation: ComputationDescription,
-        evaluation: Sequence[Rational | int]
+        self, computation: ComputationDescription, evaluation: Sequence[Rational | int]
     ) -> str:
         if self.output_fmt == OutputFormat.PLOT:
             return self.make_plot(computation, evaluation)
@@ -43,9 +41,9 @@ class Output:
                 strict=True,
             )
         )
-        headers= [computation.x_label(), computation.y_label()]
+        headers = [computation.x_label(), computation.y_label()]
         return tabulate.tabulate(rows, headers=headers)
-    
+
     def make_plot(
         self,
         computation: ComputationDescription,
@@ -61,5 +59,10 @@ class Output:
             ys=evaluation,
             xs=computation.selection_range,
             y_min=0,
+            y_max=(
+                1.01  # greater than 1 so that the label "1.0" is written on axis
+                if computation.computation_type == ComputationAction.PROBABILITY
+                else None
+            ),
         )
         return "\n".join(plt)
