@@ -5,7 +5,7 @@ from sympy.abc import x
 from urn.evaluation import make_count_draw_polynomials, evaluate
 from urn.constraint import ConstraintItem
 from urn.computation import ComputationDescription
-from urn.constants import ComputationAction, ComputationObject
+from urn.constants import ComputationType, ComputationAction
 
 
 @pytest.mark.parametrize(
@@ -88,8 +88,8 @@ def test_make_count_draw_polynomials(
     [
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.COUNT,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
                 selection_range=None,
                 collection={"A": 5},
                 constraints=[],
@@ -112,8 +112,8 @@ def test_make_count_draw_polynomials(
         # 11257389
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.COUNT,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[3, 4, 5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
                 constraints=[
@@ -125,8 +125,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.COUNT,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[3, 4, 5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
                 constraints=[
@@ -138,8 +138,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.COUNT,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
                 constraints=[
@@ -153,8 +153,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.PROBABILITY,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.PROBABILITY,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[3, 4, 5, 6, 7],
                 collection={"blue": 12, "red": 16, "green": 11},
                 constraints=[
@@ -185,8 +185,8 @@ def test_make_count_draw_polynomials(
         #        return good, total
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.PROBABILITY,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.PROBABILITY,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[5, 6, 7],
                 collection={"blue": 3, "red": 4, "green": 5},
                 constraints=[[ConstraintItem("red", 0, 4)]],
@@ -201,8 +201,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.PROBABILITY,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.PROBABILITY,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[4, 5, 6],
                 collection={"blue": 3, "red": 4, "green": 5},
                 constraints=[
@@ -219,8 +219,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.PROBABILITY,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.PROBABILITY,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[4, 5, 6],
                 collection={"blue": 3, "red": 4, "green": 5},
                 constraints=[
@@ -239,8 +239,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.COUNT,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[5, 6, 7],
                 collection={"blue": 3, "red": 4, "green": 5},
                 constraints=[],
@@ -255,8 +255,8 @@ def test_make_count_draw_polynomials(
         ),
         pytest.param(
             ComputationDescription(
-                computation_type=ComputationAction.COUNT,
-                object_type=ComputationObject.DRAW,
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
                 selection_range=[4, 5, 6],
                 collection={"blue": 3, "red": 4, "green": 5},
                 constraints=[

@@ -3,7 +3,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
 from urn.constraint import ConstraintItem
-from urn.constants import ComputationAction, ComputationObject
+from urn.constants import ComputationType, ComputationAction
 
 class ComputationDescriptionError(Exception):
     pass
@@ -12,8 +12,8 @@ class ComputationDescriptionError(Exception):
 @dataclass(eq=True)
 class ComputationDescription:
 
-    computation_type: ComputationAction = ComputationAction.COUNT
-    object_type: ComputationObject = ComputationObject.DRAW
+    computation_type: ComputationType = ComputationType.COUNT
+    computation_action: ComputationAction = ComputationAction.DRAW
     selection_range: range | Sequence[int] | None = None
     collection: Mapping[str, int] = field(default_factory=dict)
     constraints: Sequence[Sequence[ConstraintItem]] = field(default_factory=list)
@@ -73,7 +73,7 @@ class ComputationDescription:
         return sum(self.collection.values())
 
     def x_label(self) -> str:
-        return f"{self.object_type.name} size".lower()
+        return f"{self.computation_action.name} size".lower()
 
     def y_label(self) -> str:
         return self.computation_type.name.lower()

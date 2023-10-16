@@ -6,7 +6,7 @@ import tabulate
 import uniplot
 
 from urn.computation import ComputationDescription
-from urn.constants import OutputFormat, ComputationAction
+from urn.constants import OutputFormat, ComputationType
 
 
 @dataclass
@@ -61,7 +61,7 @@ class Output:
             y_min=0,
             y_max=(
                 1.01  # greater than 1 so that the label "1.0" is written on axis
-                if computation.computation_type == ComputationAction.PROBABILITY
+                if computation.computation_type == ComputationType.PROBABILITY
                 else None
             ),
         )

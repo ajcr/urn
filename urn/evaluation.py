@@ -7,7 +7,7 @@ from sympy.abc import x
 from urn.computation import ComputationDescription, ComputationDescriptionError
 from urn.constraint import ConstraintItem, union_constraint_disjuncts
 from urn.parsing import BuildComputation
-from urn.constants import ComputationAction, ComputationObject
+from urn.constants import ComputationType, ComputationAction
 
 
 def make_count_draw_polynomials(
@@ -62,7 +62,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         )
 
     if (
-        computation.object_type == ComputationObject.DRAW
+        computation.computation_action == ComputationAction.DRAW
         and computation.with_replacement is False
     ):
         _, selection_upper_bound = computation.selection_size_bounds()
@@ -83,10 +83,10 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
             selection_range, counts = zip(*pairs)
             computation.selection_range = selection_range
 
-        if computation.computation_type == ComputationAction.COUNT:
+        if computation.computation_type == ComputationType.COUNT:
             return list(counts)  # type: ignore
 
-        if computation.computation_type == ComputationAction.PROBABILITY:
+        if computation.computation_type == ComputationType.PROBABILITY:
             total_items = computation.collection_size()
             possibilities = [
                 binomial(total_items, y) for y in computation.selection_range
@@ -94,7 +94,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
             return [c/p for c, p in zip(counts, possibilities, strict=True)]
 
     elif (
-        computation.object_type == ComputationObject.DRAW
+        computation.computation_action == ComputationAction.DRAW
         and computation.with_replacement is True
     ):
         assert computation.selection_range is not None
@@ -102,7 +102,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         size = computation.collection_size()
         total_unconstrained_draws = [size**n for n in computation.selection_range]
 
-        if computation.computation_type == ComputationAction.COUNT:
+        if computation.computation_type == ComputationType.COUNT:
             if not computation.constraints:
                 return total_unconstrained_draws
             
@@ -118,10 +118,10 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         factorials = [factorial(n) for n in computation.selection_range]
         counts = [c*f for c, f in zip(coeffs, factorials, strict=True)]
 
-        if computation.computation_type == ComputationAction.COUNT:
+        if computation.computation_type == ComputationType.COUNT:
             return counts
 
-        if computation.computation_type == ComputationAction.PROBABILITY:
+        if computation.computation_type == ComputationType.PROBABILITY:
             return [
                 count / total for count, total in zip(
                     counts, total_unconstrained_draws, strict=True
@@ -129,7 +129,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
             ]
 
     else:
-        raise NotImplementedError(computation.object_type)
+        raise NotImplementedError(computation.computation_action)
 
     raise NotImplementedError(computation.computation_type)
 

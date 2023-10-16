@@ -3,7 +3,7 @@ import lark
 from urn.constraint import ConstraintItem
 from urn.output import Output
 from urn.computation import ComputationDescription
-from urn.constants import OutputFormat, ComputationAction, ComputationObject
+from urn.constants import OutputFormat, ComputationType, ComputationAction
 
 
 @lark.v_args(inline=True)
@@ -47,14 +47,14 @@ class BuildComputation(lark.Transformer):
     
     @lark.v_args(tree=True)
     def count_draw(self, _):
-        self.computation.computation_type = ComputationAction.COUNT
-        self.computation.object_type = ComputationObject.DRAW
+        self.computation.computation_type = ComputationType.COUNT
+        self.computation.computation_action = ComputationAction.DRAW
         return lark.Discard
     
     @lark.v_args(tree=True)
     def prob_draw(self, _):
-        self.computation.computation_type = ComputationAction.PROBABILITY
-        self.computation.object_type = ComputationObject.DRAW
+        self.computation.computation_type = ComputationType.PROBABILITY
+        self.computation.computation_action = ComputationAction.DRAW
         return lark.Discard
     
     @lark.v_args(tree=True)
