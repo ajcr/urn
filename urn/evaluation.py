@@ -19,10 +19,10 @@ def make_count_draw_polynomials(
     for item, item_count in collection.items():
         if item in constraints:
             min_ = constraints[item].min_
-            max_ = min([item_count+1, selection_upper_bound, constraints[item].max_])
+            max_ = min([item_count + 1, selection_upper_bound, constraints[item].max_])
         else:
             min_ = 0
-            max_ = min([item_count+1, selection_upper_bound])
+            max_ = min([item_count + 1, selection_upper_bound])
         polys.append(
             degrees_to_polynomial_with_binomial_coeff(
                 range(min_, max_), item_count  # type: ignore
@@ -53,7 +53,6 @@ def make_count_draw_with_replacement_polynomials(
     return polys
 
 
-
 def evaluate(computation: ComputationDescription) -> list[Rational | int]:
     """Evaluate the computation described by the object."""
     if not computation.is_finalised or computation.collection is None:
@@ -68,7 +67,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         _, selection_upper_bound = computation.selection_size_bounds()
         poly = Poly(0, x)
         for n, constraints in union_constraint_disjuncts(computation.constraints):
-            poly += (-1)**(n+1) * prod(
+            poly += (-1) ** (n + 1) * prod(
                 make_count_draw_polynomials(
                     collection=computation.collection,
                     constraints=constraints,
@@ -76,7 +75,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
                 )
             )
         if computation.selection_range is not None:
-            counts = [poly.coeff_monomial(x**y) for y in computation.selection_range]
+            counts = [poly.coeff_monomial(x ** y) for y in computation.selection_range]
         else:
             # Find implied selection sizes (monomials with non-zero coeffs)
             pairs = [(power, coeff) for (power,), coeff in poly.as_dict().items()]
@@ -91,7 +90,7 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
             possibilities = [
                 binomial(total_items, y) for y in computation.selection_range
             ]
-            return [c/p for c, p in zip(counts, possibilities, strict=True)]
+            return [c / p for c, p in zip(counts, possibilities, strict=True)]
 
     elif (
         computation.computation_action == ComputationAction.DRAW
@@ -100,32 +99,32 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         assert computation.selection_range is not None
 
         size = computation.collection_size()
-        total_unconstrained_draws = [size**n for n in computation.selection_range]
+        total_unconstrained_draws = [size ** n for n in computation.selection_range]
 
         if computation.computation_type == ComputationType.COUNT:
             if not computation.constraints:
                 return total_unconstrained_draws
-            
+
         poly = Poly(0, x)
         for n, constraints in union_constraint_disjuncts(computation.constraints):
-            poly += (-1)**(n+1) * prod(
+            poly += (-1) ** (n + 1) * prod(
                 make_count_draw_with_replacement_polynomials(
-                    computation=computation, constraints=constraints,
+                    computation=computation,
+                    constraints=constraints,
                 )
             )
 
-        coeffs = [poly.coeff_monomial(x**y) for y in computation.selection_range]
+        coeffs = [poly.coeff_monomial(x ** y) for y in computation.selection_range]
         factorials = [factorial(n) for n in computation.selection_range]
-        counts = [c*f for c, f in zip(coeffs, factorials, strict=True)]
+        counts = [c * f for c, f in zip(coeffs, factorials, strict=True)]
 
         if computation.computation_type == ComputationType.COUNT:
             return counts
 
         if computation.computation_type == ComputationType.PROBABILITY:
             return [
-                count / total for count, total in zip(
-                    counts, total_unconstrained_draws, strict=True
-                )
+                count / total
+                for count, total in zip(counts, total_unconstrained_draws, strict=True)
             ]
 
     else:
@@ -141,12 +140,8 @@ def degrees_to_polynomial_with_binomial_coeff(degrees: Collection[int], n: int) 
         {0, 2, 5} -> bin(n, 5)*x**5 + bin(n, 2)*x**2 + 1
 
     """
-    degree_coeff_dict = {}
-
-    for degree in degrees:
-        degree_coeff_dict[degree] = binomial(n, degree)
-
-    return Poly.from_dict(degree_coeff_dict, x)
+    coeffs = {degree: binomial(n, degree) for degree in degrees}
+    return Poly.from_dict(coeffs, x)
 
 
 def degrees_to_polynomial_with_fractional_coeff(
@@ -160,12 +155,8 @@ def degrees_to_polynomial_with_fractional_coeff(
         {5} -> (n**5 / 5!) * x**5
 
     """
-    degree_coeff_dict = {}
-
-    for degree in degrees:
-        degree_coeff_dict[degree] = Rational(n ** degree, factorial(degree))
-
-    return Poly.from_dict(degree_coeff_dict, x)
+    coeffs = {degree: Rational(n ** degree, factorial(degree)) for degree in degrees}
+    return Poly.from_dict(coeffs, x)
 
 
 def process_query(parser: lark.Lark, query: str) -> str:

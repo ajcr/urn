@@ -6,7 +6,7 @@ import tabulate
 import uniplot
 
 from urn.computation import ComputationDescription
-from urn.constants import OutputFormat, ComputationType
+from urn.constants import OutputFormat
 
 
 @dataclass
