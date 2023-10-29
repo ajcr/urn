@@ -30,10 +30,10 @@ constraint_count: NAME "="  NUMBER -> constraint_eq
                 | NUMBER  "<" NAME "<=" NUMBER -> constraint_lt_le
                 | NUMBER "<=" NAME "<=" NUMBER -> constraint_le_le
 
-output_config: ("SHOW"i output_fmt | "SHOW"i output_float)
+output_config: ("SHOW"i output_fmt | "SHOW"i output_rational)
 output_fmt:   (TABLE | PLOT) -> output_fmt
-output_float: FLOAT          -> output_float
+output_rational: RATIONAL          -> output_rational
 
 TABLE: "table"i
 PLOT:  "plot"i
-FLOAT: /floats?/i
+RATIONAL: /rationals?/i

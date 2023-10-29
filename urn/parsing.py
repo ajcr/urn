@@ -97,8 +97,8 @@ class BuildComputation(lark.Transformer):
             raise ValueError(f"Unknown output format '{output}'")
         return lark.Discard
 
-    def output_float(self, _):
-        self.output.output_float = True
+    def output_rational(self, _):
+        self.output.output_rational = True
         return lark.Discard
 
     def NUMBER(self, token):

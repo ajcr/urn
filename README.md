@@ -37,37 +37,38 @@ Suppose we want to draw _without replacement_ from an urn containing coloured ma
 ```
 urn> probability draw from red = 5, blue = 7, green = 3 where red >= 2 and blue <= 5;
 ```
-This returns the table:
+This returns the table of probabilities:
 ```
-  draw size  probability
+  draw size    probability
 -----------  -------------
-          2  2/21
-          3  22/91
-          4  37/91
-          5  81/143
-          6  101/143
-          7  9/11
-          8  8/9
-          9  128/143
-         10  9/11
-         11  43/65
-         12  29/65
-         13  1/5
+          2      0.0952381
+          3      0.241758
+          4      0.406593
+          5      0.566434
+          6      0.706294
+          7      0.818182
+          8      0.888889
+          9      0.895105
+         10      0.818182
+         11      0.661538
+         12      0.446154
+         13      0.2
+
 ```
 Note that the query keywords such as `FROM` and `WHERE` are not case sensitive. A semicolon `;` ends the query. Whitespace is ignored.
 
 We didn't specify a size for our draw, so the program returned _all_ draw sizes with a non-zero probability of meeting our constraints.
 
-By default `urn` returns rational numbers for probabilities. We can make it show floats by appending `show float`:
+By default `urn` returns float numbers for probabilities. We can make it show exact rational numbers by appending `show rational`:
 ```
-urn> probability draw 1..5 from red=5, blue=7, green=3 where red >= 2 and blue <= 5 show float;
-  draw size    probability
+urn> probability draw 1..5 from red=5, blue=7, green=3 where red >= 2 and blue <= 5 show rational;
+  draw size  probability
 -----------  -------------
-          1      0
-          2      0.0952381
-          3      0.241758
-          4      0.406593
-          5      0.566434
+          1  0
+          2  2/21
+          3  22/91
+          4  37/91
+          5  81/143
 ```
 Here we also specified a range `1..5` for the draw size. Single draw sizes (e.g. `5`) are also permitted.
 

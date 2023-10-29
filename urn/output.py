@@ -5,7 +5,7 @@ from sympy import Rational
 import tabulate
 import uniplot
 
-from urn.computation import ComputationDescription
+from urn.computation import ComputationDescription, ComputationType
 from urn.constants import OutputFormat
 
 
@@ -13,7 +13,7 @@ from urn.constants import OutputFormat
 class Output:
 
     output_fmt: OutputFormat = OutputFormat.TABLE
-    output_float: bool = False
+    output_rational: bool = False
 
     def output(
         self, computation: ComputationDescription, evaluation: Sequence[Rational | int]
@@ -30,7 +30,10 @@ class Output:
     ) -> str:
         if computation.selection_range is None:
             raise TypeError("selection range is None")
-        if self.output_float:
+        if (
+            not self.output_rational
+            and computation.computation_type == ComputationType.PROBABILITY
+        ):
             values = map(float, evaluation)
         else:
             values = evaluation
