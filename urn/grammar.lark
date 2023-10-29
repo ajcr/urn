@@ -19,7 +19,7 @@ collection: (collection_item) ("," collection_item)* -> collection
 collection_item: NAME "=" NUMBER -> collection_item
 
 constraints: and_constraints ("OR"i and_constraints)* -> constraints
-and_constraints: (constraint_count) ("AND"i constraint_count)*
+and_constraints: (constraint_count) (("AND"i | ",") constraint_count)*
 constraint_count: NAME "="  NUMBER -> constraint_eq
                 | NAME "<"  NUMBER -> constraint_lt
                 | NAME ">"  NUMBER -> constraint_gt

@@ -63,15 +63,26 @@ def parser(request):
             id="Count draw, chained constraint",
         ),
         pytest.param(
+            "COUNT DRAWS FROM A=7 WHERE A > 4, A <= 5;",
+            ComputationDescription(
+                computation_type=ComputationType.COUNT,
+                computation_action=ComputationAction.DRAW,
+                selection_range=None,
+                collection={"A": 7},
+                constraints=[
+                    [ConstraintItem("A", 5, INFINITY), ConstraintItem("A", 0, 6)]
+                ],
+            ),
+            id="Count draw, repeated AND constraint using ','",
+        ),
+        pytest.param(
             "COUNT DRAWS FROM A=7, B=11 WHERE A = 2 OR B <= 7;",
             ComputationDescription(
                 computation_type=ComputationType.COUNT,
                 computation_action=ComputationAction.DRAW,
                 selection_range=None,
                 collection={"A": 7, "B": 11},
-                constraints=[
-                    [ConstraintItem("A", 2, 3)], [ConstraintItem("B", 0, 8)]
-                ],
+                constraints=[[ConstraintItem("A", 2, 3)], [ConstraintItem("B", 0, 8)]],
             ),
             id="Count draw, two constraint disjuncts",
         ),
@@ -88,11 +99,7 @@ def parser(request):
         ),
     ],
 )
-def test_build_computation_description_from_string(
-    parser, query, expected_computation
-):
+def test_build_computation_description_from_string(parser, query, expected_computation):
     tree = parser.parse(query)
     comp = BuildComputation().transform(tree)
     assert comp.computation == expected_computation
-
-
