@@ -34,6 +34,6 @@ output_config: ("SHOW"i output_fmt | "SHOW"i output_float)
 output_fmt:   (TABLE | PLOT) -> output_fmt
 output_float: FLOAT          -> output_float
 
-TABLE: "table"
-PLOT:  "plot"
-FLOAT: /floats?/
+TABLE: "table"i
+PLOT:  "plot"i
+FLOAT: /floats?/i
