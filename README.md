@@ -1,16 +1,12 @@
 # urn
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/ajcr/urn/main/assets/hypergeom.png" alt="hypergeometric choices"/>
-</p>
-
-A fast draw probability calculator with an intuitive language interface.
+A fast multivariate hypergeometric calculator with an intuitive language interface.
 
 Find the probability of drawing a target set of objects from a collection, either with or without replacement.
 
 Display the results as a table or a plot in your terminal.
 
-## Quickstart
+## Using the calculator
 
 The `urn` program can be run as a shell:
 ```
