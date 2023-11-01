@@ -25,10 +25,6 @@ By default, the computation assumes that draws are made without replacement. Thi
 
 Let's look at some examples.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/ajcr/urn/main/assets/rbg_draw_1.png" alt="constraints using AND"/>
-</p>
-
 Suppose we want to draw _without replacement_ from an urn containing coloured marbles. We want to see the probability that we see _at least_ 2 red and _at most_ 5 blue:
 ```
 urn> probability draw from red = 5, blue = 7, green = 3 where red >= 2 and blue <= 5;
@@ -121,10 +117,6 @@ urn> probability draw 2..13 with replacement
 ```
 
 Finally, we can use `OR` to specify any number of alternative constraints on our draw.
-<p align="center">
-  <img src="https://raw.githubusercontent.com/ajcr/urn/main/assets/rbg_draw_2.png" alt="constraints using OR"/>
-</p>
-
 ```
 urn> probability draw 1..10 from red=5, blue=7, green=3
 ...  where red >= 2 and blue <= 3
