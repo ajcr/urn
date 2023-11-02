@@ -30,7 +30,7 @@ def main() -> None:
     from urn.shell import run_shell
     from urn.evaluation import process_query
 
-    command_parser = lark.Lark.open("grammar.lark", rel_to=__package__)
+    command_parser = lark.Lark.open("grammar.lark", rel_to=__file__)
 
     if args.command or args.filename:
         
