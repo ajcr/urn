@@ -5,21 +5,22 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "urn-calculator"
 version = "0.0.1"
-description = "Multivariate hypergeometric command line calculator"
+description = "Multivariate hypergeometric command line calculator."
 readme = "README.md"
 authors = [{ name = "Alex Riley" }]
 license = { file = "LICENSE" }
-    classifiers=[
-      "Development Status :: 3 - Alpha",
-      "Topic :: Scientific/Engineering :: Mathematics",
-      "Topic :: Scientific/Engineering :: Visualization",
-      "Topic :: Utilities",
-      "Typing :: Typed",
-      "Intended Audience :: Science/Research",
-      "License :: OSI Approved :: MIT License",
-      "Programming Language :: Python :: 3.10",
-      "Programming Language :: Python :: 3.11",
-    ]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 keywords = ["calculator", "probability", "count", "draw", "random", "sample", "hypergeometric"]
 dependencies = [
     "lark >= 1.1.5",
@@ -30,7 +31,7 @@ dependencies = [
 requires-python = ">=3.10"
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "ruff"]
 
 [project.urls]
 Homepage = "https://github.com/ajcr/urn"
