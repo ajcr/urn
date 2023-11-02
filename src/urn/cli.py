@@ -5,7 +5,7 @@ import lark
 
 from urn import __version__
 
-DESCRIPTION = "Draw odds calculator."
+DESCRIPTION = "Multivariate hypergeometric calculator."
 
 
 def parse_args() -> argparse.Namespace:
@@ -30,7 +30,7 @@ def main() -> None:
     from urn.shell import run_shell
     from urn.evaluation import process_query
 
-    command_parser = lark.Lark.open("grammar.lark", rel_to=__file__)
+    command_parser = lark.Lark.open("grammar.lark", rel_to=__package__)
 
     if args.command or args.filename:
         
