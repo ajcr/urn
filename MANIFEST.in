@@ -1,1 +1,1 @@
-include grammar.lark
+include src/urn/grammar.lark

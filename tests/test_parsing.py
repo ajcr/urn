@@ -8,8 +8,9 @@ from urn.parsing import BuildComputation
 
 
 @pytest.fixture(scope="session")
-def parser():
-    return lark.Lark.open("grammar.lark")
+def parser(request):
+    rel_to = request.config.rootdir / "src" / "urn" / "grammar.lark"
+    return lark.Lark.open("grammar.lark", rel_to=rel_to)
 
 
 @pytest.mark.parametrize(
