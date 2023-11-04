@@ -1,10 +1,19 @@
 # urn
 
+![PyPI version](https://img.shields.io/pypi/v/urn-calculator.svg?color=brightgreen)
+
 A fast multivariate hypergeometric calculator with an intuitive language interface.
 
 Find the probability of drawing a target set of objects from a collection, either with or without replacement.
 
 Display the results as a table or a plot in your terminal.
+
+## Installing the calculator
+
+The calculator can be installed via pypi:
+```
+pip install urn-calculator==0.0.1
+```
 
 ## Using the calculator
 
