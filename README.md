@@ -160,5 +160,5 @@ urn> probability draw 1..10 from red=5, blue=7, green=3
 To exit the shell, type `quit`:
 ```
 urn> quit;
-Exiting urn.
+Exiting urn shell.
 ```

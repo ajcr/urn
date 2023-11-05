@@ -45,7 +45,7 @@ class UrnShell(cmd.Cmd):
             print(f"Parser error: {error}", file=sys.stderr)
 
     def do_quit(self, _) -> bool:
-        print("Exiting urn.")
+        print("Exiting urn shell.")
         return True
     
     def emptyline(self) -> None:
@@ -54,8 +54,3 @@ class UrnShell(cmd.Cmd):
 
     def _process_input(self, query: str) -> str:
         return process_query(self.parser, query)
-
-
-def run_shell(parser: lark.Lark) -> None:
-    """Run urn shell."""
-    UrnShell(parser=parser).cmdloop()

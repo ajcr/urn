@@ -5,6 +5,7 @@ import lark
 
 from urn import __version__
 
+
 DESCRIPTION = "Multivariate hypergeometric calculator."
 
 
@@ -26,11 +27,11 @@ def main() -> None:
 
     args = parse_args()
 
-    # Delay expensive imports until needed.
-    from urn.shell import run_shell
+    # Delay more expensive imports until needed.
+    from urn.shell import UrnShell
     from urn.evaluation import process_query
 
-    command_parser = lark.Lark.open("grammar.lark", rel_to=__file__)
+    parser = lark.Lark.open("grammar.lark", rel_to=__file__)
 
     if args.command or args.filename:
         
@@ -40,12 +41,12 @@ def main() -> None:
         else:
             command = args.command
         try:
-            print(process_query(command_parser, command))
+            print(process_query(parser, command))
         except lark.exceptions.LarkError as error:
             print(f"Command parsing error: {error}", file=sys.stderr)
             sys.exit(1)
     else:
-        run_shell(command_parser)
+        UrnShell(parser=parser).cmdloop()
 
 
 if __name__ == "__main__":
