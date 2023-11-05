@@ -12,7 +12,11 @@ Display the results as a table or a plot in your terminal.
 
 The calculator can be installed via pypi:
 ```
-pip install urn-calculator==0.0.1
+pip install urn-calculator
+```
+Some calculations may be faster with the [gmpy2](https://pypi.org/project/gmpy2/) library installed. This is optional:
+```
+pip install urn-calculator[gmpy2]
 ```
 
 ## Using the calculator
