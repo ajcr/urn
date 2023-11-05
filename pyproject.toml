@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "urn-calculator"
-version = "0.0.1"
+version = "0.0.2"
 description = "Multivariate hypergeometric command line calculator."
 readme = "README.md"
 authors = [{ name = "Alex Riley" }]
