@@ -1,9 +1,7 @@
 import itertools
+import math
 from collections.abc import Iterable, Sequence, Generator
 from dataclasses import dataclass
-
-
-INFINITY = float("inf")
 
 
 @dataclass(eq=True)
@@ -14,7 +12,7 @@ class ConstraintItem:
     """
     name: str
     min_: int = 0
-    max_: int | float = INFINITY
+    max_: int | float = math.inf
 
     def __and__(self, other):
         if not isinstance(other, ConstraintItem):

@@ -1,7 +1,9 @@
+import math
+
 import lark
 import pytest
 
-from urn.constraint import ConstraintItem, INFINITY
+from urn.constraint import ConstraintItem
 from urn.computation import ComputationDescription
 from urn.constants import ComputationType, ComputationAction
 from urn.parsing import BuildComputation
@@ -46,7 +48,7 @@ def parser(request):
                 selection_range=None,
                 collection={"A": 7},
                 constraints=[
-                    [ConstraintItem("A", 0, 6), ConstraintItem("A", 4, INFINITY)]
+                    [ConstraintItem("A", 0, 6), ConstraintItem("A", 4, math.inf)]
                 ],
             ),
             id="Count draw, two constraints on same item",
@@ -70,7 +72,7 @@ def parser(request):
                 selection_range=None,
                 collection={"A": 7},
                 constraints=[
-                    [ConstraintItem("A", 5, INFINITY), ConstraintItem("A", 0, 6)]
+                    [ConstraintItem("A", 5, math.inf), ConstraintItem("A", 0, 6)]
                 ],
             ),
             id="Count draw, repeated AND constraint using ','",
