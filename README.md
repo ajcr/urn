@@ -105,8 +105,8 @@ To see the same calculation, but in the case where we draw _with replacement_, w
 
 ```
 urn> probability draw 2..13 with replacement
-...  from red=5, blue=7, green=3
-...  where red >= 2 and blue <= 5 show plot;
+     from red=5, blue=7, green=3
+     where red >= 2 and blue <= 5 show plot;
 ┌────────────────────────────────────────────────────────────┐
 │                           ▖    ▝     ▖                     │ 
 │                                                            │ 
@@ -132,10 +132,10 @@ urn> probability draw 2..13 with replacement
 Finally, we can use `OR` to specify any number of alternative constraints on our draw.
 ```
 urn> probability draw 1..10 from red=5, blue=7, green=3
-...  where red >= 2 and blue <= 3
-...  or blue > 0 and green > 1
-...  or blue = 2 red >= 2 and green <= 2
-...  show plot;
+     where red >= 2 and blue <= 3
+     or blue > 0 and green > 1
+     or blue = 2 red >= 2 and green <= 2
+     show plot;
 ┌────────────────────────────────────────────────────────────┐
 │                                       ▗      ▝      ▘     ▝│ 1.0
 │                                                            │ 

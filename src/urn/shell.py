@@ -9,7 +9,7 @@ from urn.evaluation import process_query
 
 EOL = ";"
 PROMPT = "urn> "
-PROMPT_CONTINUATION = "...  "
+PROMPT_CONTINUATION = " " * len(PROMPT)
 
 
 class UrnShell(cmd.Cmd):
