@@ -8,10 +8,7 @@ from urn.constants import OutputFormat, ComputationType, ComputationAction
 
 @lark.v_args(inline=True)
 class BuildComputation(lark.Transformer):
-    """
-    Build a Computation description from a syntax tree.
-    
-    """
+    """Build ComputationDescription and Output classes from a syntax tree."""
     def __init__(self):
         super().__init__()
         self.computation = ComputationDescription()

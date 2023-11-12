@@ -11,6 +11,11 @@ class ComputationDescriptionError(Exception):
 
 @dataclass(eq=True)
 class ComputationDescription:
+    """Description of a computation to be evaluated.
+
+    This class can be initialised and then modified, but the `finalise`
+    method must be called before the described computation is evaluated.
+    """
 
     computation_type: ComputationType = ComputationType.COUNT
     computation_action: ComputationAction = ComputationAction.DRAW
@@ -60,6 +65,7 @@ class ComputationDescription:
         self.is_finalised = True
 
     def selection_size_bounds(self) -> tuple[int, int]:
+        """Lower (inclusive) and upper (exclusive) bounds on selection size."""
         if self.selection_range is None:
             return 0, self.collection_size() + 1
         elif isinstance(self.selection_range, range):
@@ -68,6 +74,7 @@ class ComputationDescription:
             return min(self.selection_range), max(self.selection_range) + 1
 
     def collection_size(self) -> int:
+        """Total number of items in collection."""
         if self.collection is None:
             raise ComputationDescriptionError("Collection is undefined.")
         return sum(self.collection.values())

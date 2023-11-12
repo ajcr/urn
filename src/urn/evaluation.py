@@ -10,11 +10,37 @@ from urn.parsing import BuildComputation
 from urn.constants import ComputationType, ComputationAction
 
 
+def degrees_to_polynomial_with_binomial_coeff(degrees: Collection[int], n: int) -> Poly:
+    """For each degree `d`, create the polynomial with terms
+    of degree `d` having binomial coefficient `bin(n, d)`:
+
+        {0, 2, 5} -> bin(n, 5)*x**5 + bin(n, 2)*x**2 + 1
+
+    """
+    coeffs = {degree: binomial(n, degree) for degree in degrees}
+    return Poly.from_dict(coeffs, x)
+
+
+def degrees_to_polynomial_with_fractional_coeff(
+    degrees: Collection[int], n: int
+) -> Poly:
+    """For each degree `d`, create the polynomial with those
+    terms with coefficient (n**d / d!) where n is the count
+    of the item in the collection:
+
+        {5} -> (n**5 / 5!) * x**5
+
+    """
+    coeffs = {degree: Rational(n ** degree, factorial(degree)) for degree in degrees}
+    return Poly.from_dict(coeffs, x)
+
+
 def make_count_draw_polynomials(
     collection: Mapping[str, int],
     constraints: Mapping[str, ConstraintItem],
     selection_upper_bound: int,
 ) -> list[Poly]:
+    """Make polynomials for each item in when drawing WITHOUT replacement."""
     polys = []
     for item, item_count in collection.items():
         if item in constraints:
@@ -35,6 +61,7 @@ def make_count_draw_with_replacement_polynomials(
     computation: ComputationDescription,
     constraints: Mapping[str, ConstraintItem],
 ) -> list[Poly]:
+    """Make polynomials for each item in when drawing WITH replacement."""
     polys = []
     _, selection_upper_bound = computation.selection_size_bounds()
     for item, item_count in computation.collection.items():
@@ -131,32 +158,6 @@ def evaluate(computation: ComputationDescription) -> list[Rational | int]:
         raise NotImplementedError(computation.computation_action)
 
     raise NotImplementedError(computation.computation_type)
-
-
-def degrees_to_polynomial_with_binomial_coeff(degrees: Collection[int], n: int) -> Poly:
-    """For each degree `d`, create the polynomial with terms
-    of degree `d` having binomial coefficient `bin(n, d)`:
-
-        {0, 2, 5} -> bin(n, 5)*x**5 + bin(n, 2)*x**2 + 1
-
-    """
-    coeffs = {degree: binomial(n, degree) for degree in degrees}
-    return Poly.from_dict(coeffs, x)
-
-
-def degrees_to_polynomial_with_fractional_coeff(
-    degrees: Collection[int], n: int
-) -> Poly:
-    """
-    For each degree `d`, create the polynomial with those
-    terms with coefficient (n**d / d!) where n is the count
-    of the item in the collection:
-
-        {5} -> (n**5 / 5!) * x**5
-
-    """
-    coeffs = {degree: Rational(n ** degree, factorial(degree)) for degree in degrees}
-    return Poly.from_dict(coeffs, x)
 
 
 def process_query(parser: lark.Lark, query: str) -> str:

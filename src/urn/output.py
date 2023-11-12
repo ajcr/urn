@@ -11,6 +11,12 @@ from urn.constants import OutputFormat
 
 @dataclass
 class Output:
+    """Output formatter.
+
+    The `make_*` methods accept a computation description and a
+    sequence of numerical values that is formatted as string to
+    be printed to the terminal.
+    """
 
     output_fmt: OutputFormat = OutputFormat.TABLE
     output_rational: bool = False

@@ -8,7 +8,8 @@ from dataclasses import dataclass
 class ConstraintItem:
     """Constraint on item.
 
-    Bounds an integer range [min_, max_)
+    Bounds an integer range [min_, max_) that the item
+    count can have in a draw.
     """
     name: str
     min_: int = 0
