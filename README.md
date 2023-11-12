@@ -38,9 +38,9 @@ By default, the computation assumes that draws are made without replacement. Thi
 
 Let's look at some examples.
 
-Suppose we want to draw _without replacement_ from an urn containing coloured marbles. We want to see the probability that we see _at least_ 2 red and _at most_ 5 blue:
+Suppose we want to draw _without replacement_ from an urn containing coloured marbles. We want to see the probability that we see _at least_ 2 red and _at most_ 5 blue (and we don't care about the green marbles):
 ```
-urn> probability draw from red = 5, blue = 7, green = 3 where red >= 2 and blue <= 5;
+urn> PROBABILITY DRAW FROM red=5, blue=7, green=3 WHERE red >= 2 AND blue <= 5;
 ```
 This returns the table of probabilities:
 ```
@@ -64,9 +64,11 @@ Note that the query keywords such as `FROM` and `WHERE` are not case sensitive. 
 
 We didn't specify a size for our draw, so the program returned _all_ draw sizes with a non-zero probability of meeting our constraints.
 
-By default `urn` returns float numbers for probabilities. We can make it show exact rational numbers by appending `show rational`:
+By default `urn` returns float numbers for probabilities. We can make it show exact rational numbers by appending `SHOW RATIONAL`:
 ```
-urn> probability draw 1..5 from red=5, blue=7, green=3 where red >= 2 and blue <= 5 show rational;
+urn> PROBABILITY DRAW 1..5 FROM red=5, blue=7, green=3
+     WHERE red >= 2 AND blue <= 5
+     SHOW RATIONAL;
   draw size  probability
 -----------  -------------
           1  0
@@ -77,9 +79,11 @@ urn> probability draw 1..5 from red=5, blue=7, green=3 where red >= 2 and blue <
 ```
 Here we also specified a range `1..5` for the draw size. Single draw sizes (e.g. `5`) are also permitted.
 
-It's useful to create a plot (`show plot`) to see the optimal draw size at a glance:
+It's often useful to create a plot (`SHOW PLOT`) to see the optimal draw size at a glance:
 ```
-urn> probability draw from red=5, blue=7, green=3 where red >= 2 and blue <= 5 show plot;
+urn> PROBABILITY DRAW FROM red=5, blue=7, green=3
+     WHERE red >= 2 AND blue <= 5
+     SHOW PLOT;
 ┌────────────────────────────────────────────────────────────┐
 │                                ▝     ▘                     │ 
 │                           ▘               ▝                │ 
@@ -104,9 +108,10 @@ urn> probability draw from red=5, blue=7, green=3 where red >= 2 and blue <= 5 s
 To see the same calculation, but in the case where we draw _with replacement_, we must specify a range and use the `WITH REPLACEMENT` modifier:
 
 ```
-urn> probability draw 2..13 with replacement
-     from red=5, blue=7, green=3
-     where red >= 2 and blue <= 5 show plot;
+urn> PROBABILITY DRAW 2..13 WITH REPLACEMENT
+     FROM red=5, blue=7, green=3
+     WHERE red >= 2 AND blue <= 5
+     SHOW PLOT;
 ┌────────────────────────────────────────────────────────────┐
 │                           ▖    ▝     ▖                     │ 
 │                                                            │ 
@@ -129,13 +134,13 @@ urn> probability draw 2..13 with replacement
    2             5             7           10            12
 ```
 
-Finally, we can use `OR` to specify any number of alternative constraints on our draw.
+Finally, we can use `OR` to specify alternative constraints on our draw.
 ```
-urn> probability draw 1..10 from red=5, blue=7, green=3
-     where red >= 2 and blue <= 3
-     or blue > 0 and green > 1
-     or blue = 2 red >= 2 and green <= 2
-     show plot;
+urn> PROBABILITY DRAW 1..10 FROM red=5, blue=7, green=3
+     WHERE red  >= 2 AND blue  <= 3
+        OR blue >  0 AND green  > 1
+        OR blue =  2 AND red   >= 2 AND green <= 2
+     SHOW PLOT;
 ┌────────────────────────────────────────────────────────────┐
 │                                       ▗      ▝      ▘     ▝│ 1.0
 │                                                            │ 
