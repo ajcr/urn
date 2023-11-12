@@ -16,7 +16,7 @@ pip install urn-calculator
 ```
 Some calculations may be faster with the [gmpy2](https://pypi.org/project/gmpy2/) library installed. This is optional:
 ```
-pip install urn-calculator[gmpy2]
+pip install gmpy2
 ```
 
 ## Using the calculator

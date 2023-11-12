@@ -32,7 +32,6 @@ requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
-gmpy2 = ["gmpy2"]
 
 [project.urls]
 Homepage = "https://github.com/ajcr/urn"
